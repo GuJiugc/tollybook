@@ -28,7 +28,7 @@ class BillController extends Controller {
                 amount,
                 type_id,
                 type_name,
-                date: moment(date).format('YYYY-MM-DD'),
+                date: moment(date).format('YYYY-MM-DD HH:mm'),
                 pay_type,
                 remark,
                 user_id
@@ -165,7 +165,8 @@ class BillController extends Controller {
     
     async update() {
         const {ctx,app} = this
-        const {id, pay_type, amount, type_id, type_name, remark = '',date} = ctx.request.body
+        let {id, pay_type, amount, type_id, type_name, remark = '',date} = ctx.request.body
+        date = moment(date).format('YYYY-MM-DD HH:mm')
         if(!amount || !id || !type_id || !type_name || !pay_type) {
             ctx.body = {
                 code: 400,
@@ -246,7 +247,7 @@ class BillController extends Controller {
             // 总支出
             const total_expense = _data.reduce((pre,cur) => {
                 if(cur.pay_type == 1) {
-                    pre += cur.amount
+                    pre += Number(cur.amount)
                 }
                 return pre
             },0)
@@ -254,7 +255,7 @@ class BillController extends Controller {
             // 总收入
             const total_income = _data.reduce((pre,cur) => {
                 if(cur.pay_type == 2) {
-                    pre += cur.amount
+                    pre += Number(cur.amount)
                 }
                 return pre
             },0)

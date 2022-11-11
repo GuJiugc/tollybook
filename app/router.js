@@ -19,4 +19,5 @@ module.exports = app => {
   router.get('/api/bill/delete',_jwt,controller.bill.delete)
   router.get('/api/bill/data',_jwt,controller.bill.data)
   router.get('/api/type/list',_jwt,controller.type.list)
+  router.post('/api/user/modifypass',_jwt,controller.user.modifypass)
 };

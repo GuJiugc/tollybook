@@ -150,6 +150,35 @@ class UserController extends Controller {
             
         }
     }
+
+    async modifypass() {
+        const {ctx,app} = this
+        const {oldpass,newpass,newpass2} = ctx.request.body
+
+        try{
+            const token = ctx.request.header.token
+            const decode = await app.jwt.verify(token, app.config.jwt.secret)
+            if(!decode) return
+            let id = decode.id
+            const userInfo = await ctx.service.user.getUserByName(decode.username)
+            if(oldpass != userInfo.password) {
+                ctx.body = {
+                    code: 400,
+                    msg: '原密码不正确',
+                    data: null
+                }
+            }else{
+                const result = await ctx.service.user.modifypass({password: newpass, id})
+                ctx.body = {
+                    code: 200,
+                    msg: '请求成功',
+                    data: null
+                }
+            }
+        }catch(err) {
+            return null
+        }
+    }
 }
 
 module.exports = UserController;
